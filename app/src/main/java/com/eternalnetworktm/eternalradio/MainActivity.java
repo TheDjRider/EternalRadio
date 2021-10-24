@@ -1,5 +1,6 @@
 package com.eternalnetworktm.eternalradio;
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
+    //StreamingPart
     Button Play;
     String stream = "https://radio.jump.bg/proxy/mnikolov/stream";
     MediaPlayer mediaPlayer;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Play = findViewById(R.id.Radio);
@@ -60,8 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        ----
-
+        //JSON Parser
         mTextViewResult = findViewById(R.id.text_view_result);
         Button buttonParse = findViewById(R.id.button_parse);
 
@@ -75,27 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 jsonParse();
             }
         });
-    }
 
-    private class PlayTask extends AsyncTask<String, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... strings) {
-            try {
-                mediaPlayer.setDataSource(strings[0]);
-                mediaPlayer.prepare();
-                prepared = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return prepared;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            Play.setEnabled(true);
-            Play.setText("PLAY");
-        }
     }
 
     @Override
@@ -122,6 +104,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class PlayTask extends AsyncTask<String, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            try {
+                mediaPlayer.setDataSource(strings[0]);
+                mediaPlayer.prepare();
+                prepared = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return prepared;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            Play.setEnabled(true);
+            Play.setText("PLAY");
+        }
+    }
+
     private void jsonParse() {
 
         String url = "https://radiocp.novahost.bg:2199/rpc/mnikolov/streaminfo.get";
@@ -143,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                 String date = data.getString("date");
                                 String time = data.getString("time");
 
-                                mTextViewResult.append("\nSong: " + song + ",\nBitrate: " + bitrate + ",\nListeners: " + listeners + " / " + maxlisteners + ",\n" + date + " " + time +"\n\n");
+                                mTextViewResult.append("\nSong: " + song + ",\nBitrate: " + bitrate + ",\nListeners: " + listeners + " / " + maxlisteners + ",\n" + date + " " + time + "\n\n");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -157,5 +160,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mQueue.add(request);
+    }
+
+    //AboutUs Section
+    public void AboutUs(View view) {
+        Intent i = new Intent(this, AboutUs.class);
+        startActivity(i);
     }
 }
