@@ -49,6 +49,32 @@
         android:padding="5dp"
         android:text="@string/parse" />
 
+    <Button
+        android:id="@+id/aboutUs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="266dp"
+        android:layout_marginTop="292dp"
+        android:background="@color/design_default_color_primary"
+        android:onClick="AboutUs"
+        android:padding="5dp"
+        android:text="@string/about_us"
+        android:textStyle="bold"
+        tools:ignore="OnClick,Suspicious0dp,UsingOnClickInXml" />
+
+    <Button
+        android:id="@+id/lastSongs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="54dp"
+        android:layout_marginTop="292dp"
+        android:background="@color/design_default_color_primary"
+        android:onClick="RecentFeed"
+        android:padding="2dp"
+        android:text="@string/last_songs"
+        android:textStyle="bold"
+        tools:ignore="OnClick,Suspicious0dp,UsingOnClickInXml" />
+
     <TextView
         android:id="@+id/text_view_result"
         android:layout_width="wrap_content"
@@ -56,22 +82,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="30dp"
         android:layout_marginBottom="40dp"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/black"
         android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="266dp"
-        android:layout_marginTop="292dp"
-        android:background="#FFCC00"
-        android:onClick="AboutUs"
-        android:text="@string/about_us"
-        android:textStyle="bold"
-        tools:ignore="OnClick,Suspicious0dp,UsingOnClickInXml" />
 
 </RelativeLayout>

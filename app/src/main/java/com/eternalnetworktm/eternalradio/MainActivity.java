@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Play = findViewById(R.id.Radio);
         Play.setEnabled(false);
-        Play.setText("Loading Please Wait...");
+        Play.setText(R.string.loadgin_pls_wait);
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -54,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
                 if (started) {
                     started = false;
                     mediaPlayer.pause();
-                    Play.setText("Play");
+                    Play.setText(R.string.play);
                 } else {
                     started = true;
                     mediaPlayer.start();
-                    Play.setText("Pause");
+                    Play.setText(R.string.pause);
                 }
             }
         });
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             Play.setEnabled(true);
-            Play.setText("PLAY");
+            Play.setText(R.string.play);
         }
     }
 
@@ -165,6 +165,12 @@ public class MainActivity extends AppCompatActivity {
     //AboutUs Section
     public void AboutUs(View view) {
         Intent i = new Intent(this, AboutUs.class);
+        startActivity(i);
+    }
+
+    //RecentFeed Section
+    public void RecentFeed(View view) {
+        Intent i = new Intent(this, RecentFeed.class);
         startActivity(i);
     }
 }

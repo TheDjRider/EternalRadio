@@ -4,4 +4,9 @@
     <string name="parse">parse</string>
     <string name="play">Play</string>
     <string name="about_us">About us</string>
+    <string name="last_songs">Last Songs</string>
+    <string name="loadgin_pls_wait">Loading Please Wait...</string>
+    <string name="pause">Pause</string>
+    <string name="recent_songs">Recent Songs</string>
+    <string name="fetch_data">Fetch Data</string>
 </resources>
