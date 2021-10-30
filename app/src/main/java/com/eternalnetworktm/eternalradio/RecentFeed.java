@@ -21,6 +21,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RecentFeed extends AppCompatActivity {
 
@@ -92,6 +94,13 @@ public class RecentFeed extends AppCompatActivity {
 
                         JSONObject titles = items.getJSONObject(i);
                         String title = titles.getString("title");
+                        Pattern pattern = Pattern.compile("^(.*?)(?:\\ *?\\[.*\\])?$");
+
+                        Matcher matcher = pattern.matcher(title);
+
+                        while (matcher.find()) {
+                            title = matcher.group();
+                        }
 
                         recentList.add(title);
                     }
