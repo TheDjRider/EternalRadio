@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Eternal Radio</string>
+    <string name="eternal_radio">EternalRadio</string>
+    <string name="parse">Актуализирай</string>
+    <string name="play">Пусни</string>
+    <string name="about_us">За нас</string>
+    <string name="last_songs">Последни песни</string>
+    <string name="loading_pls_wait">Зареждане, моля изчакайте…</string>
+    <string name="pause">Пауза</string>
+    <string name="recent_songs">Последни песни</string>
+    <string name="fetch_data">Извлечи данни</string>
+    <string name="song">Песен</string>
+    <string name="listeners">Слушатели</string>
+    <string name="bitrate">Битрейт</string>
+    <string name="updating_data">Извличане на данни</string>
+    <string name="settings">Настройки</string>
+    <string name="english">Английски</string>
+    <string name="bulgarian">Български</string>
+    <string name="shake_event_detected">Открито е събитие на разклащане</string>
+    <string name="select_language">Изберете език</string>
+</resources>

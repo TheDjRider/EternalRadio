@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        //Shake Start
         setContentView(R.layout.activity_main);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Objects.requireNonNull(mSensorManager).registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -59,11 +60,12 @@ public class MainActivity extends AppCompatActivity {
         mAccel = 10f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
+        //Shake End
 
         setContentView(R.layout.activity_main);
         Play = findViewById(R.id.Radio);
         Play.setEnabled(false);
-        Play.setText(R.string.loadgin_pls_wait);
+        Play.setText(R.string.loading_pls_wait);
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 12) {
-                Toast.makeText(getApplicationContext(), "Shake event detected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.shake_event_detected), Toast.LENGTH_SHORT).show();
             }
         }
         @Override
@@ -124,17 +126,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
-        if (started) {
-            mediaPlayer.pause();
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (started) {
-            mediaPlayer.start();
-        }
     }
 
     @Override
@@ -142,9 +138,6 @@ public class MainActivity extends AppCompatActivity {
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
         super.onResume();
-        if (prepared) {
-            mediaPlayer.release();
-        }
     }
 
     private class PlayTask extends AsyncTask<String, Void, Boolean> {
@@ -186,10 +179,8 @@ public class MainActivity extends AppCompatActivity {
                                 String bitrate = data.getString("bitrate");
                                 String listeners = data.getString("listeners");
                                 String maxlisteners = data.getString("maxlisteners");
-                                String date = data.getString("date");
-                                String time = data.getString("time");
 
-                                mTextViewResult.append("\nSong: " + song + ",\nBitrate: " + bitrate + ",\nListeners: " + listeners + " / " + maxlisteners + ",\n" + date + " " + time + "\n\n");
+                                mTextViewResult.append(getString(R.string.song) + ": " + song + "\n" + getString(R.string.listeners) + ": " + listeners + " / " + maxlisteners + "\n" + getString(R.string.bitrate) + ": " + bitrate + "\n\n");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

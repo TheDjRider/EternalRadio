@@ -21,19 +21,20 @@
 
     </RelativeLayout>
 
-    <!--    <Button-->
-<!--        android:id="@+id/aboutUs"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="266dp"-->
-<!--        android:layout_marginTop="292dp"-->
-<!--        android:background="@color/design_default_color_primary"-->
-<!--        android:onClick="AboutUs"-->
-<!--        android:padding="5dp"-->
-<!--        android:text="@string/about_us"-->
-<!--        android:textColor="@color/white"-->
-<!--        android:textStyle="bold"-->
-<!--        tools:ignore="OnClick,Suspicious0dp,UsingOnClickInXml" />-->
+    <Button
+        android:id="@+id/aboutUs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="266dp"
+        android:layout_marginTop="292dp"
+        android:background="@color/design_default_color_primary"
+        android:onClick="AboutUs"
+        android:padding="5dp"
+        android:text="@string/about_us"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:ignore="OnClick,Suspicious0dp,UsingOnClickInXml" />
 
     <Button
         android:id="@+id/Radio"

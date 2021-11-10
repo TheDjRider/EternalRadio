@@ -67,7 +67,7 @@ public class RecentFeed extends AppCompatActivity {
                 @Override
                 public void run() {
                     progressDialog = new ProgressDialog(RecentFeed.this);
-                    progressDialog.setMessage("Updating data");
+                    progressDialog.setMessage(getString(R.string.updating_data));
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                 }
