@@ -74,7 +74,7 @@ public class RecentFeed extends AppCompatActivity {
             });
 
             try {
-                URL url = new URL("https://radiocp.novahost.bg:2199/recentfeed/mnikolov/json/");
+                URL url = new URL("https://radio.jump.bg:2199/recentfeed/mnikolov/json/");
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -99,7 +99,7 @@ public class RecentFeed extends AppCompatActivity {
                         Matcher matcher = pattern.matcher(title);
 
                         while (matcher.find()) {
-                            title = matcher.group();
+                            title = matcher.group(1);
                         }
 
                         recentList.add(title);

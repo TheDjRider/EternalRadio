@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void jsonParse() {
 
-        String url = "https://radiocp.novahost.bg:2199/rpc/mnikolov/streaminfo.get";
+        String url = "https://radio.jump.bg:2199/rpc/mnikolov/streaminfo.get";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
