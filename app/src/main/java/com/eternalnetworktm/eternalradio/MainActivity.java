@@ -1,7 +1,10 @@
 package com.eternalnetworktm.eternalradio;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,11 +12,17 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,10 +47,13 @@ public class MainActivity extends BaseActivity {
     private TextView mTextViewResult;
     private RequestQueue mQueue;
 
+    //Shake Detection Part
     private SensorManager mSensorManager;
     private float mAccel;
     private float mAccelCurrent;
     private float mAccelLast;
+
+    //Notification Part
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +78,13 @@ public class MainActivity extends BaseActivity {
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         new PlayTask().execute(stream);
+
+        //Notification Start
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("Eternal Radio", "Eternal Radio", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
         Play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,14 +117,37 @@ public class MainActivity extends BaseActivity {
             mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             new PlayTask().execute(stream);
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mediaPlayer.start();
-                    Play.setText(R.string.pause);
-                }
+            mediaPlayer.setOnPreparedListener(mp -> {
+                mediaPlayer.start();
+                Play.setText(R.string.pause);
+                sendNotification(
+                        getString(R.string.app_name),
+                        "Eternal Radio is now playing");
             });
         }
+    }
+
+    //notification
+    private void sendNotification(String title, String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "Eternal Radio")
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        if (ActivityCompat.checkSelfPermission(this, "android.permission.POST_NOTIFICATIONS") != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        notificationManager.notify(1, builder.build());
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -192,7 +234,10 @@ public class MainActivity extends BaseActivity {
                             String listeners = data.getString("listeners");
                             String maxlisteners = data.getString("maxlisteners");
 
-                            mTextViewResult.append(getString(R.string.song) + ": " + song + "\n" + getString(R.string.listeners) + ": " + listeners + " / " + maxlisteners + "\n" + getString(R.string.bitrate) + ": " + bitrate + "\n\n");
+                            mTextViewResult.append(
+                                    getString(R.string.song) + ": " + song + "\n" +
+                                            getString(R.string.listeners) + ": " + listeners + " / " + maxlisteners + "\n" +
+                                            getString(R.string.bitrate) + ": " + bitrate + "\n");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
