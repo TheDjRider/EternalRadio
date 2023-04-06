@@ -15,12 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -31,7 +27,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     //StreamingPart
     Button Play;
     String stream = "https://radio.jump.bg/proxy/mnikolov/stream";
@@ -74,15 +70,7 @@ public class MainActivity extends AppCompatActivity {
         Play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (started) {
-                    started = false;
-                    mediaPlayer.pause();
-                    Play.setText(R.string.play);
-                } else {
-                    started = true;
-                    mediaPlayer.start();
-                    Play.setText(R.string.pause);
-                }
+                handlePlayButtonClick();
             }
         });
 
@@ -94,13 +82,30 @@ public class MainActivity extends AppCompatActivity {
 
         jsonParse();
 
-        buttonParse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jsonParse();
-            }
+        buttonParse.setOnClickListener(v -> {
+            mTextViewResult.setText(""); // Clear the previous text
+            jsonParse(); // Parse and display the new data
         });
 
+
+    }
+
+    private void handlePlayButtonClick() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            Play.setText(R.string.play);
+        } else {
+            mediaPlayer.reset();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            new PlayTask().execute(stream);
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer.start();
+                    Play.setText(R.string.pause);
+                }
+            });
+        }
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
@@ -114,7 +119,14 @@ public class MainActivity extends AppCompatActivity {
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta;
             if (mAccel > 12) {
-                Toast.makeText(getApplicationContext(), getString(R.string.shake_event_detected), Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        getApplicationContext(),
+                        getString(R.string.shake_event_detected),
+                        Toast.LENGTH_SHORT).show();
+                if (mediaPlayer.isPlaying()) {
+                    mediaPlayer.stop();
+                }
+                handlePlayButtonClick();
             }
         }
 
@@ -125,20 +137,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
+        mSensorManager.unregisterListener(mSensorListener);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mSensorManager.unregisterListener(mSensorListener);
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
-        super.onResume();
     }
 
     private class PlayTask extends AsyncTask<String, Void, Boolean> {
@@ -167,32 +180,24 @@ public class MainActivity extends AppCompatActivity {
         String url = "https://radio.jump.bg:2199/rpc/mnikolov/streaminfo.get";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("data");
+                response -> {
+                    try {
+                        JSONArray jsonArray = response.getJSONArray("data");
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject data = jsonArray.getJSONObject(i);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject data = jsonArray.getJSONObject(i);
 
-                                String song = data.getString("song");
-                                String bitrate = data.getString("bitrate");
-                                String listeners = data.getString("listeners");
-                                String maxlisteners = data.getString("maxlisteners");
+                            String song = data.getString("song");
+                            String bitrate = data.getString("bitrate");
+                            String listeners = data.getString("listeners");
+                            String maxlisteners = data.getString("maxlisteners");
 
-                                mTextViewResult.append(getString(R.string.song) + ": " + song + "\n" + getString(R.string.listeners) + ": " + listeners + " / " + maxlisteners + "\n" + getString(R.string.bitrate) + ": " + bitrate + "\n\n");
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            mTextViewResult.append(getString(R.string.song) + ": " + song + "\n" + getString(R.string.listeners) + ": " + listeners + " / " + maxlisteners + "\n" + getString(R.string.bitrate) + ": " + bitrate + "\n\n");
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
+                }, error -> error.printStackTrace());
 
         mQueue.add(request);
     }

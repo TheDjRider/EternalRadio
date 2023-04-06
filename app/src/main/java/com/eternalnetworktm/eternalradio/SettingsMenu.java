@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class SettingsMenu extends AppCompatActivity {
+public class SettingsMenu extends BaseActivity {
 
     TextView dialog_language, lang_selector, helloworld;
     int lang_selected;
@@ -95,6 +95,5 @@ public class SettingsMenu extends AppCompatActivity {
                 dialogBuilder.create().show();
             }
         });
-
     }
 }

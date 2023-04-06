@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RecentFeed extends AppCompatActivity {
+public class RecentFeed extends BaseActivity {
 
     //https://youtu.be/5lNQLR53UtY
 
